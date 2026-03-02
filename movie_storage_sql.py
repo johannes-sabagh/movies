@@ -54,7 +54,7 @@ def update_movie(title, rating):
         try:
             connection.execute(text("UPDATE movies SET rating = :rating WHERE title = :title"), {"title": title, "rating":rating})
             connection.commit()
-            print(f"Movie '{title}' deleted successfully.")
+            print(f"Movie '{title}' updated successfully.")
         except Exception as e:
             print(f"Error: {e}")
 

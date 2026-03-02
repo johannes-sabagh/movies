@@ -1,26 +1,25 @@
 import statistics
 import random
-import movie_storage
-import movie_storage_sql
+import movie_storage_sql as storage
 
 
-def list_movies():
+def command_list_movies():
     """
     Display all movies with their year and rating.
     """
-    movie_storage_sql.list_movies()
-    # # Retrieve all movies from storage
-    # all_movies = movie_storage.get_movies()
-    #
-    # # Display total count
-    # print(f"{len(all_movies)} movies in total.")
-    #
-    #
-    # # Loop through and display each movie with its details
-    # for movie, data in all_movies.items():
-    #     movie_year = data["year"]
-    #     movie_rating = data["rating"]
-    #     print(f"{movie} ({movie_year}) : {movie_rating}")
+
+    # Retrieve all movies from storage
+    all_movies = storage.list_movies()
+
+    # Display total count
+    print(f"{len(all_movies)} movies in total.")
+
+
+    # Loop through and display each movie with its details
+    for movie, data in all_movies.items():
+        movie_year = data["year"]
+        movie_rating = data["rating"]
+        print(f"{movie} ({movie_year}) : {movie_rating}")
 
 
 def add_movie():
@@ -38,7 +37,7 @@ def add_movie():
             print("invalid input")
 
     # Retrieve all movies from storage
-    all_movies = movie_storage.get_movies()
+    all_movies = storage.list_movies()
 
 
     # Check if movie already exists in database
@@ -60,8 +59,8 @@ def add_movie():
                 print("must be a number between 0 an 10")
 
         # Add the new movie to storage
-        movie_storage.add_movie(new_title, new_year, new_rating)
-        print(f"Movie {new_title} added successfully!")
+        storage.add_movie(new_title, new_year, new_rating)
+        #print(f"Movie {new_title} added successfully!")
     else:
         # Inform user that movie already exists
         print(f"Movie {new_title} already exist!")
@@ -82,12 +81,12 @@ def delete_movie():
             print("invalid input")
 
     # Retrieve all movies from storage
-    all_movies = movie_storage.get_movies()
+    all_movies = storage.list_movies()
 
     # Check if movie exists before attempting deletion
     if movie_to_delete in list(all_movies.keys()):
         # Delete the movie from storage
-        movie_storage.delete_movie(movie_to_delete)
+        storage.delete_movie(movie_to_delete)
         print(f"Movie {movie_to_delete} movie successfully deleted")
     else:
         # Inform user that movie doesn't exist
@@ -109,7 +108,7 @@ def update_movie():
             print("invalid input")
 
     # Retrieve all movies from storage
-    all_movies = movie_storage.get_movies()
+    all_movies = storage.list_movies()
 
     # Check if movie exists before updating
     if movie_to_update in list(all_movies.keys()):
@@ -125,7 +124,7 @@ def update_movie():
 
 
         # Update the movie rating in storage
-        movie_storage.update_movie(movie_to_update, update_rating)
+        storage.update_movie(movie_to_update, update_rating)
         print(f"Movie {movie_to_update} successfully updated")
     else:
         # Inform user that movie doesn't exist
@@ -138,7 +137,7 @@ def stats():
     """
 
     # Retrieve all movies from storage
-    all_movies = movie_storage.get_movies()
+    all_movies = storage.list_movies()
     if not all_movies:
         print("The movie database is empty!")
         return
@@ -187,7 +186,7 @@ def random_movie():
     """
 
     # Retrieve all movies from storage
-    all_movies = movie_storage.get_movies()
+    all_movies = storage.list_movies()
     if not all_movies:
         print("The movie database is empty!")
         return
@@ -206,7 +205,7 @@ def search_movie():
     text_to_find = input("Enter part of movie name: ")
 
     # Retrieve all movies from storage
-    all_movies = movie_storage.get_movies()
+    all_movies = storage.list_movies()
 
     # Search through all movies for partial matches
     for movie, data in all_movies.items():
@@ -221,7 +220,7 @@ def sort_movies_by_rating():
     """
 
     # Retrieve all movies from storage
-    all_movies = movie_storage.get_movies()
+    all_movies = storage.list_movies()
 
     # Sort movies by rating in descending order
     for movie, data in sorted(all_movies.items(), key=lambda x: x[1]["rating"], reverse=True):
@@ -234,7 +233,7 @@ def sort_movies_by_year():
     """
 
     # Retrieve all movies from storage
-    all_movies = movie_storage.get_movies()
+    all_movies = storage.list_movies()
 
     # Ask user for sort order preference and accept only valid input y or n
     while True:
@@ -262,7 +261,7 @@ def filter_movies():
     """
 
     # Retrieve all movies from storage
-    all_movies = movie_storage.get_movies()
+    all_movies = storage.list_movies()
 
     # Get filter criteria from user (default values if left blank)
     minimum_rating = int(input("Enter minimum rating (leave blank for no minimum rating): ") or 0)
@@ -308,7 +307,7 @@ def menu_display():
             print("Bye!")
             return
         elif user_choice == 1:
-            list_movies()
+            command_list_movies()
             wait_user = input("Press enter to continue")
         elif user_choice == 2:
             add_movie()
