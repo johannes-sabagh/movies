@@ -1,25 +1,26 @@
 import statistics
 import random
 import movie_storage
+import movie_storage_sql
 
 
 def list_movies():
     """
     Display all movies with their year and rating.
     """
-
-    # Retrieve all movies from storage
-    all_movies = movie_storage.get_movies()
-
-    # Display total count
-    print(f"{len(all_movies)} movies in total.")
-
-
-    # Loop through and display each movie with its details
-    for movie, data in all_movies.items():
-        movie_year = data["year"]
-        movie_rating = data["rating"]
-        print(f"{movie} ({movie_year}) : {movie_rating}")
+    movie_storage_sql.list_movies()
+    # # Retrieve all movies from storage
+    # all_movies = movie_storage.get_movies()
+    #
+    # # Display total count
+    # print(f"{len(all_movies)} movies in total.")
+    #
+    #
+    # # Loop through and display each movie with its details
+    # for movie, data in all_movies.items():
+    #     movie_year = data["year"]
+    #     movie_rating = data["rating"]
+    #     print(f"{movie} ({movie_year}) : {movie_rating}")
 
 
 def add_movie():
