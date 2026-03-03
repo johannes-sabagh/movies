@@ -51,6 +51,10 @@ def fetch_movie(new_title):
         new_rating = movie_data.json()["imdbRating"]
         return new_title, new_year, new_rating
 
+    except requests.exceptions.ConnectionError:
+        print("Error: No internet connection.")
+        return None
+
     except Exception as e:
         print(f"Error: {e}")
 
@@ -80,13 +84,15 @@ def add_movie():
 
     # Only fetch and add the movie if it doesn't already exist in the database
     if not new_title in list(all_movies.keys()):
+        try:
+            # Fetch title, year, and IMDb rating from the OMDb API
+            result = fetch_movie(new_title)
+            new_title, new_year, new_rating = result
 
-        # Fetch title, year, and IMDb rating from the OMDb API
-        result = fetch_movie(new_title)
-        new_title, new_year, new_rating = result
-
-        # Add the new movie entry to storage
-        storage.add_movie(new_title, new_year, new_rating)
+            # Add the new movie entry to storage
+            storage.add_movie(new_title, new_year, new_rating)
+        except Exception as e:
+            print(f"Error: {e}")
 
     else:
         print(f"Movie {new_title} already exist!")
