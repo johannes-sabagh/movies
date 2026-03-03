@@ -20,7 +20,8 @@ def command_list_movies():
     for movie, data in all_movies.items():
         movie_year = data["year"]
         movie_rating = data["rating"]
-        print(f"{movie} ({movie_year}) : {movie_rating}")
+        movie_poster = data["poster"]
+        print(f"{movie} ({movie_year}) : {movie_rating} poster:{movie_poster}")
 
 
 
@@ -49,7 +50,8 @@ def fetch_movie(new_title):
         new_title = movie_data.json()["Title"]
         new_year = movie_data.json()["Year"]
         new_rating = movie_data.json()["imdbRating"]
-        return new_title, new_year, new_rating
+        new_poster = movie_data.json()["Poster"]
+        return new_title, new_year, new_rating, new_poster
 
     except requests.exceptions.ConnectionError:
         print("Error: No internet connection.")
@@ -87,10 +89,10 @@ def add_movie():
         try:
             # Fetch title, year, and IMDb rating from the OMDb API
             result = fetch_movie(new_title)
-            new_title, new_year, new_rating = result
+            new_title, new_year, new_rating, new_poster = result
 
             # Add the new movie entry to storage
-            storage.add_movie(new_title, new_year, new_rating)
+            storage.add_movie(new_title, new_year, new_rating, new_poster)
         except Exception as e:
             print(f"Error: {e}")
 
