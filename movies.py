@@ -1,6 +1,7 @@
 import statistics
 import random
 import movie_storage_sql as storage
+import requests
 
 
 def command_list_movies():
@@ -22,11 +23,48 @@ def command_list_movies():
         print(f"{movie} ({movie_year}) : {movie_rating}")
 
 
+
+def fetch_movie(new_title):
+    """
+    Fetch movie details from the OMDb API by title.
+
+    Args:
+        new_title (str): The title of the movie to search for.
+
+    Returns:
+        tuple: A (title, year, imdb_rating) tuple if the movie is found.
+
+    Raises:
+        Exception: Prints any unexpected errors (e.g. network issues) to stdout.
+        """
+    try:
+        # Make a GET request to the OMDb API using the provided movie title
+        movie_data = requests.get(f"https://www.omdbapi.com/?apikey=c28f089c&t={new_title}")
+
+        # OMDb returns this specific payload when no match is found
+        if movie_data.json() == {'Response': 'False', 'Error': 'Movie not found!'}:
+            return f"The movie {new_title} not found"
+
+        # Extract the relevant fields from the JSON response
+        new_title = movie_data.json()["Title"]
+        new_year = movie_data.json()["Year"]
+        new_rating = movie_data.json()["imdbRating"]
+        return new_title, new_year, new_rating
+
+    except Exception as e:
+        print(f"Error: {e}")
+
+
+
 def add_movie():
     """
-    Add a new movie to the database with year and rating.
+    Prompt the user for a movie title, fetch its details, and add it to the database.
+
+    Validates that the user provides a non-empty title, then checks whether the
+    movie already exists in storage before fetching from the OMDb API and saving.
     """
-    # Get the movie title from user and not allowing empty input
+
+    # Keep prompting until the user enters a non-empty, non-whitespace title
     while True:
         try:
             new_title = input("Enter new movie name: ")
@@ -36,33 +74,21 @@ def add_movie():
         except ValueError as e:
             print("invalid input")
 
-    # Retrieve all movies from storage
+    # Retrieve the current list of movies from storage to check for duplicates
     all_movies = storage.list_movies()
 
 
-    # Check if movie already exists in database
+    # Only fetch and add the movie if it doesn't already exist in the database
     if not new_title in list(all_movies.keys()):
-        # Get year and rating from user and not allowing empty or wrong input
-        while True:
-            try:
-                new_year = int(input("Enter new movie year: "))
-                break
-            except ValueError:
-                print("invalid input")
-        while True:
-            try:
-                new_rating = float(input("Enter new movie rating: "))
-                if new_rating > 10 or new_rating < 0:
-                    raise ValueError
-                break
-            except ValueError:
-                print("must be a number between 0 an 10")
 
-        # Add the new movie to storage
+        # Fetch title, year, and IMDb rating from the OMDb API
+        result = fetch_movie(new_title)
+        new_title, new_year, new_rating = result
+
+        # Add the new movie entry to storage
         storage.add_movie(new_title, new_year, new_rating)
-        #print(f"Movie {new_title} added successfully!")
+
     else:
-        # Inform user that movie already exists
         print(f"Movie {new_title} already exist!")
 
 
