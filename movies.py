@@ -2,7 +2,7 @@ import statistics
 import random
 import movie_storage_sql as storage
 import requests
-
+import website_generator
 
 def command_list_movies():
     """
@@ -22,7 +22,6 @@ def command_list_movies():
         movie_rating = data["rating"]
         movie_poster = data["poster"]
         print(f"{movie} ({movie_year}) : {movie_rating} poster:{movie_poster}")
-
 
 
 def fetch_movie(new_title):
@@ -323,7 +322,7 @@ def menu_display():
 
     while True:
         # Display menu options
-        menu_text = "Menu:\n0. Exit\n1. List movies\n2. Add movie\n3. Delete movie\n4. Update movie\n5. Stats\n6. Random movie\n7. Search movie\n8. Movies sorted by rating\n9. Movies sorted by year\n10. Filter movies\n"
+        menu_text = "Menu:\n0. Exit\n1. List movies\n2. Add movie\n3. Delete movie\n4. Update movie\n5. Stats\n6. Random movie\n7. Search movie\n8. Movies sorted by rating\n9. Generate website\n"
         print(menu_text)
 
         # Get user's menu choice with error handling
@@ -365,11 +364,13 @@ def menu_display():
             sort_movies_by_rating()
             wait_user = input("Press enter to continue")
         elif user_choice == 9:
-            sort_movies_by_year()
             wait_user = input("Press enter to continue")
-        elif user_choice == 10:
-            filter_movies()
-            wait_user = input("Press enter to continue")
+            TEXT_PLACEHOLDER = "__TEMPLATE_MOVIE_GRID__"
+            TITLE_PLACEHOLDER = "__TEMPLATE_TITLE__"
+            NEW_TITLE = "Johannes' Movie Collection"
+            website_generator.create_final_html(TEXT_PLACEHOLDER, TITLE_PLACEHOLDER, NEW_TITLE)
+
+
         else:
             # Handle invalid menu choices
             print("invalid choice")
@@ -385,6 +386,8 @@ def main():
     print("********** My Movies Database **********")
 
     # Start the main menu loop
+
+
     menu_display()
 
 
