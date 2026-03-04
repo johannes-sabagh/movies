@@ -22,7 +22,6 @@ movies/
 │   ├── website_generator.py
 │   └── movie_storage_sql.py
 ├── main.py
-├── movies.db
 └── requirements.txt
 ```
 
