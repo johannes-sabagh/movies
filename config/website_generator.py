@@ -1,6 +1,4 @@
-
-import movie_storage_sql as storage
-
+from movie_storage import movie_storage_sql as storage
 
 html_path = "_static/index_template.html"
 
@@ -105,7 +103,7 @@ def create_final_html(TEXT_PLACEHOLDER, TITLE_PLACEHOLDER, NEW_TITLE):
         # Write the completed HTML to the output file
         with open("_static/index.html", "w") as final_html:
             final_html.write(final_html_text)
-        print("Website generated successfully!")
+        print("Website generated successfully! open the file index.html inside the _static folder")
     except IOError as e:
         print(f"Error writing output HTML file: {e}")
         raise

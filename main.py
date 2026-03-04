@@ -1,8 +1,9 @@
 import statistics
 import random
-import movie_storage_sql as storage
+from movie_storage import movie_storage_sql as storage
 import requests
-import website_generator
+from config import website_generator
+
 
 def command_list_movies():
     """
