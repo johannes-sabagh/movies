@@ -56,6 +56,8 @@ def fetch_movie(new_title):
         print("Error: No internet connection.")
         return None
 
+    # to catch other errors
+
     except Exception as e:
         print(f"Error: {e}")
 
@@ -364,11 +366,12 @@ def menu_display():
             sort_movies_by_rating()
             wait_user = input("Press enter to continue")
         elif user_choice == 9:
-            wait_user = input("Press enter to continue")
+
             TEXT_PLACEHOLDER = "__TEMPLATE_MOVIE_GRID__"
             TITLE_PLACEHOLDER = "__TEMPLATE_TITLE__"
             NEW_TITLE = "Johannes' Movie Collection"
             website_generator.create_final_html(TEXT_PLACEHOLDER, TITLE_PLACEHOLDER, NEW_TITLE)
+            wait_user = input("Press enter to continue")
 
 
         else:
