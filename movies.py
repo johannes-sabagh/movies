@@ -15,13 +15,12 @@ def command_list_movies():
     # Display total count
     print(f"{len(all_movies)} movies in total.")
 
-
     # Loop through and display each movie with its details
     for movie, data in all_movies.items():
         movie_year = data["year"]
         movie_rating = data["rating"]
         movie_poster = data["poster"]
-        print(f"{movie} ({movie_year}) : {movie_rating} poster:{movie_poster}")
+        print(f"{movie} ({movie_year}) : {movie_rating}")
 
 
 def fetch_movie(new_title):
@@ -36,7 +35,7 @@ def fetch_movie(new_title):
 
     Raises:
         Exception: Prints any unexpected errors (e.g. network issues) to stdout.
-        """
+    """
     try:
         # Make a GET request to the OMDb API using the provided movie title
         movie_data = requests.get(f"https://www.omdbapi.com/?apikey=c28f089c&t={new_title}")
@@ -62,7 +61,6 @@ def fetch_movie(new_title):
         print(f"Error: {e}")
 
 
-
 def add_movie():
     """
     Prompt the user for a movie title, fetch its details, and add it to the database.
@@ -84,7 +82,6 @@ def add_movie():
     # Retrieve the current list of movies from storage to check for duplicates
     all_movies = storage.list_movies()
 
-
     # Only fetch and add the movie if it doesn't already exist in the database
     if not new_title in list(all_movies.keys()):
         try:
@@ -95,7 +92,7 @@ def add_movie():
             # Add the new movie entry to storage
             storage.add_movie(new_title, new_year, new_rating, new_poster)
         except Exception as e:
-            print(f"Error: {e}")
+            print(f"The movie {new_title} is not found")
 
     else:
         print(f"Movie {new_title} already exist!")
@@ -122,7 +119,6 @@ def delete_movie():
     if movie_to_delete in list(all_movies.keys()):
         # Delete the movie from storage
         storage.delete_movie(movie_to_delete)
-        print(f"Movie {movie_to_delete} movie successfully deleted")
     else:
         # Inform user that movie doesn't exist
         print(f"Movie {movie_to_delete} doesn't exist!")
@@ -157,10 +153,9 @@ def update_movie():
             except ValueError:
                 print("must be a number between 0 an 10")
 
-
         # Update the movie rating in storage
         storage.update_movie(movie_to_update, update_rating)
-        print(f"Movie {movie_to_update} successfully updated")
+
     else:
         # Inform user that movie doesn't exist
         print(f"Movie {movie_to_update} doesn't exist!")
@@ -214,7 +209,6 @@ def stats():
         print(f"  {movie}, {min_value}")
 
 
-
 def random_movie():
     """
     Suggest a random movie from the database.
@@ -243,11 +237,14 @@ def search_movie():
     all_movies = storage.list_movies()
 
     # Search through all movies for partial matches
+    found = False
     for movie, data in all_movies.items():
-        # Case-insensitive comparison
         if text_to_find.casefold() in movie.casefold():
             print(movie + ",", data["rating"])
+            found = True
 
+    if not found:
+        print("not found!")
 
 def sort_movies_by_rating():
     """
@@ -366,19 +363,14 @@ def menu_display():
             sort_movies_by_rating()
             wait_user = input("Press enter to continue")
         elif user_choice == 9:
-
             TEXT_PLACEHOLDER = "__TEMPLATE_MOVIE_GRID__"
             TITLE_PLACEHOLDER = "__TEMPLATE_TITLE__"
             NEW_TITLE = "Johannes' Movie Collection"
             website_generator.create_final_html(TEXT_PLACEHOLDER, TITLE_PLACEHOLDER, NEW_TITLE)
             wait_user = input("Press enter to continue")
-
-
         else:
             # Handle invalid menu choices
             print("invalid choice")
-
-
 
 
 def main():
