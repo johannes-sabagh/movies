@@ -45,7 +45,7 @@ def fetch_movie(new_title):
 
     try:
         # Make a GET request to the OMDb API using the provided movie title
-        movie_data = requests.get(f"https://www.omdbapi.com/?apikey={api_key}c&t={new_title}")
+        movie_data = requests.get(f"https://www.omdbapi.com/?apikey={api_key}&t={new_title}")
 
         # OMDb returns this specific payload when no match is found
         if movie_data.json() == {'Response': 'False', 'Error': 'Movie not found!'}:
@@ -94,6 +94,12 @@ def add_movie():
         try:
             # Fetch title, year, and IMDb rating from the OMDb API
             result = fetch_movie(new_title)
+
+            # Handle the API failure explicitly before unpacking
+            if result is None or isinstance(result, str):
+                print(result or "Could not fetch movie data.")
+                return
+
             new_title, new_year, new_rating, new_poster = result
 
             # Add the new movie entry to storage
