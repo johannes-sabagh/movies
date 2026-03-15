@@ -3,6 +3,10 @@ import random
 from movie_storage import movie_storage_sql as storage
 import requests
 from config import website_generator
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 def command_list_movies():
@@ -37,9 +41,11 @@ def fetch_movie(new_title):
     Raises:
         Exception: Prints any unexpected errors (e.g. network issues) to stdout.
     """
+    api_key = os.environ.get("APIKEY")
+
     try:
         # Make a GET request to the OMDb API using the provided movie title
-        movie_data = requests.get(f"https://www.omdbapi.com/?apikey=c28f089c&t={new_title}")
+        movie_data = requests.get(f"https://www.omdbapi.com/?apikey={api_key}c&t={new_title}")
 
         # OMDb returns this specific payload when no match is found
         if movie_data.json() == {'Response': 'False', 'Error': 'Movie not found!'}:
