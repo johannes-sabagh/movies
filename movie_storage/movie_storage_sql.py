@@ -1,4 +1,5 @@
 from sqlalchemy import create_engine, text
+from sqlalchemy.exc import IntegrityError, OperationalError, SQLAlchemyError
 
 # Define the database URL
 DB_URL = "sqlite:///data/movies.db"
@@ -36,8 +37,10 @@ def add_movie(title, year, rating, poster):
                                {"title": title, "year": year, "rating": rating, "poster": poster})
             connection.commit()
             print(f"Movie '{title}' added successfully.")
-        except Exception as e:
-            print(f"Error: {e}")
+        except IntegrityError:
+            print(f"Error: Movie '{title}' already exists or violates a constraint.")
+        except OperationalError as e:
+            print(f"Database operational error: {e}")
 
 def delete_movie(title):
     """Delete a movie from the database."""
@@ -46,8 +49,8 @@ def delete_movie(title):
             connection.execute(text("DELETE FROM movies WHERE title = :title"), {"title": title})
             connection.commit()
             print(f"Movie '{title}' deleted successfully.")
-        except Exception as e:
-            print(f"Error: {e}")
+        except OperationalError as e:
+            print(f"Database operational error: {e}")
 
 def update_movie(title, rating):
     """Update a movie's rating in the database."""
@@ -56,6 +59,8 @@ def update_movie(title, rating):
             connection.execute(text("UPDATE movies SET rating = :rating WHERE title = :title"), {"title": title, "rating":rating})
             connection.commit()
             print(f"Movie '{title}' updated successfully.")
-        except Exception as e:
-            print(f"Error: {e}")
+        except OperationalError as e:
+            print(f"Database operational error: {e}")
+        except SQLAlchemyError as e:
+            print(f"Unexpected database error: {e}")
 
