@@ -339,7 +339,7 @@ def menu_display():
 
         # Get user's menu choice with error handling
         try:
-            user_choice = int(input("Enter choice (1-10): "))
+            user_choice = int(input("Enter choice (0-9): "))
         except ValueError:
             # Handle non-integer input
             print("invalid choice")
