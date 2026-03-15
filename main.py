@@ -46,16 +46,16 @@ def fetch_movie(new_title):
     try:
         # Make a GET request to the OMDb API using the provided movie title
         movie_data = requests.get(f"https://www.omdbapi.com/?apikey={api_key}&t={new_title}")
-
+        json_movie_data = movie_data.json()
         # OMDb returns this specific payload when no match is found
-        if movie_data.json() == {'Response': 'False', 'Error': 'Movie not found!'}:
+        if json_movie_data == {'Response': 'False', 'Error': 'Movie not found!'}:
             return f"The movie {new_title} not found"
 
         # Extract the relevant fields from the JSON response
-        new_title = movie_data.json()["Title"]
-        new_year = movie_data.json()["Year"]
-        new_rating = movie_data.json()["imdbRating"]
-        new_poster = movie_data.json()["Poster"]
+        new_title = json_movie_data["Title"]
+        new_year = json_movie_data["Year"]
+        new_rating = json_movie_data["imdbRating"]
+        new_poster = json_movie_data["Poster"]
         return new_title, new_year, new_rating, new_poster
 
     except requests.exceptions.ConnectionError:
